@@ -12,6 +12,8 @@ namespace SudokuWaveFuncCollapse
 {
     public partial class Main : Form
     {
+        private readonly int sideLength = 800;
+
         public Main()
         {
             InitializeComponent();
@@ -19,9 +21,16 @@ namespace SudokuWaveFuncCollapse
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Maximized;
-            this.MinimumSize = this.Size;
-            this.MaximumSize = this.Size;
+            this.Size = new Size(sideLength+70, sideLength+90);
+
+            Panel back = new Panel();
+            back.Size = this.Size;
+            back.BackColor = Color.Black;
+            back.Padding = new Padding(20);
+            this.Controls.Add(back);
+
+            Panel gridPanel = Grid.GenerateGraphicalGrid(sideLength, sideLength);
+            back.Controls.Add(gridPanel);
         }
     }
 }
