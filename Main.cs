@@ -12,7 +12,8 @@ namespace SudokuWaveFuncCollapse
 {
     public partial class Main : Form
     {
-        private readonly int sideLength = 800;
+        private readonly int sideLength = 450;
+        private static readonly int margin = 25;
 
         public Main()
         {
@@ -21,16 +22,24 @@ namespace SudokuWaveFuncCollapse
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Size = new Size(sideLength+70, sideLength+90);
+            // Set the size of the window
+            // The addition is to allow space for margins, and the bar at the top
+            int mywidth = sideLength + (margin * 2) + 20;
+            int myheight = sideLength + (margin * 2) + 40;
+            this.Size = new Size(mywidth, myheight);
 
-            Panel back = new Panel();
-            back.Size = this.Size;
-            back.BackColor = Color.Black;
-            back.Padding = new Padding(20);
-            this.Controls.Add(back);
+            // Create a background panel to attach the grid panel to.
+            // This is a workaround for margins which are weird and seem to only kick in when docked, which i don't care for
+            Panel borderBack = new Panel
+            {
+                Size = this.Size,
+                BackColor = Color.Black
+            };
+            this.Controls.Add(borderBack);
 
-            Panel gridPanel = Grid.GenerateGraphicalGrid(sideLength, sideLength);
-            back.Controls.Add(gridPanel);
+            // Now, generate the sudoku grid and its label children
+            Panel gridPanel = Grid.GenerateGraphicalGrid(sideLength, margin);
+            borderBack.Controls.Add(gridPanel);
         }
     }
 }
