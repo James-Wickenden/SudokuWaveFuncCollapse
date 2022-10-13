@@ -27,6 +27,7 @@ namespace SudokuWaveFuncCollapse
             int mywidth = sideLength + (margin * 2) + 20;
             int myheight = sideLength + (margin * 2) + 40;
             this.Size = new Size(mywidth, myheight);
+            this.Text = "Sudoku Wave Collapse Function Solver";
 
             // Create a background panel to attach the grid panel to.
             // This is a workaround for margins which are weird and seem to only kick in when docked, which i don't care for
@@ -38,8 +39,14 @@ namespace SudokuWaveFuncCollapse
             this.Controls.Add(borderBack);
 
             // Now, generate the sudoku grid and its label children
-            Panel gridPanel = Grid.GenerateGraphicalGrid(sideLength, margin);
+            Label[] cells = Grid.GenerateGraphicalGrid(sideLength, margin);
+            Panel gridPanel = (Panel)cells[0].Parent.Parent;
             borderBack.Controls.Add(gridPanel);
+
+            for (int i=0;i<cells.Length;i++)
+            {
+                cells[i].Text = i.ToString();
+            }
         }
     }
 }
