@@ -70,25 +70,48 @@ namespace SudokuWaveFuncCollapse
     {
         public Cell[] Cells = new Cell[81];
         public WaveCollapseModel Model = new WaveCollapseModel();
+        public Dictionary<int, string> sudokuMap = new Dictionary<int, string>();
+        public int SudokuNo = -1;
 
         public Sudoku(Dictionary<int,int> boxCellMap, GraphicGrid graphicGrid)
         {
-            string loadedSudokuGrids = System.IO.File.ReadAllText("sudokus.txt");
-            string[] sudokuStrs = loadedSudokuGrids.Split('G');
-            for(int i = 1; i < sudokuStrs.Length; i++)
-            {
-                int index = sudokuStrs[i].IndexOf(System.Environment.NewLine);
-                sudokuStrs[i] = sudokuStrs[i].Substring(index + System.Environment.NewLine.Length);
-            }
-            string randomSudoku = sudokuStrs[(new Random()).Next(sudokuStrs.Length)];
+            LoadSudokus();
+
+            //SudokuNo = (new Random()).Next(sudokuMap.Keys.Count);
+            SudokuNo = 1;
+            string randomSudoku = sudokuMap[SudokuNo];
             CreateCells(boxCellMap, graphicGrid, randomSudoku.Replace("\n", "").Replace("\r", ""));
         }
-        
+
+        public Sudoku(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, int sudokuIndex)
+        {
+            if (sudokuIndex == 50) sudokuIndex = 1;
+            LoadSudokus();
+            SudokuNo = sudokuIndex;
+            string loadedSudokuGrid = sudokuMap[sudokuIndex];
+            loadedSudokuGrid = loadedSudokuGrid.Replace("\n", "").Replace("\r", "");
+            CreateCells(boxCellMap, graphicGrid, loadedSudokuGrid);
+        }
+
         public Sudoku(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, string filename)
         {
             string loadedSudokuGrid = System.IO.File.ReadAllText(filename);
             loadedSudokuGrid = loadedSudokuGrid.Replace("\n", "").Replace("\r", "");
             CreateCells(boxCellMap, graphicGrid, loadedSudokuGrid);
+        }
+
+        private void LoadSudokus()
+        {
+            string loadedSudokuGrids = System.IO.File.ReadAllText("sudokus.txt");
+            string[] sudokuStrs = loadedSudokuGrids.Split('G');
+
+            for (int i = 1; i < sudokuStrs.Length; i++)
+            {
+                int index = sudokuStrs[i].IndexOf(System.Environment.NewLine);
+                int sudokuNo = int.Parse(sudokuStrs[i].Split('\n')[0].Split('d').Last().Split(' ').Last());
+                sudokuStrs[i] = sudokuStrs[i].Substring(index + System.Environment.NewLine.Length);
+                sudokuMap[sudokuNo] = sudokuStrs[i];
+            }
         }
 
         private void CreateCells(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, string loadedSudokuGrid = "")

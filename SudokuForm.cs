@@ -77,12 +77,13 @@ namespace SudokuWaveFuncCollapse
             Button buttonRestart = new Button()
             {
                 Width = 210, Height = 50, Top = 500, BackColor=Color.White,
-                Text = "Restart",
+                Text = "Next",
                 Left = 265
             };
             backPanel.Controls.Add(buttonRestart);
             buttonRestart.Click += (sender, args) => {
-                sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid);
+                sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid, sudoku.SudokuNo + 1);
+                this.Text = "Sudoku Wave Collapse Function Solver " + sudoku.SudokuNo.ToString();
             };
         }
     }
