@@ -34,8 +34,7 @@ namespace SudokuWaveFuncCollapse
             backPanel.Controls.Add(graphicGrid.GetGridPanel());
 
             // Next, create the sudoku model
-            sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid, "test_sudoku.txt");
-            
+            sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid);
         }
 
         private void ConfigureForm()
@@ -82,6 +81,9 @@ namespace SudokuWaveFuncCollapse
                 Left = 265
             };
             backPanel.Controls.Add(buttonRestart);
+            buttonRestart.Click += (sender, args) => {
+                sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid);
+            };
         }
     }
 }

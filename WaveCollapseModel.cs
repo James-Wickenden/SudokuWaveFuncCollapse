@@ -73,7 +73,15 @@ namespace SudokuWaveFuncCollapse
 
         public Sudoku(Dictionary<int,int> boxCellMap, GraphicGrid graphicGrid)
         {
-            CreateCells(boxCellMap, graphicGrid);
+            string loadedSudokuGrids = System.IO.File.ReadAllText("sudokus.txt");
+            string[] sudokuStrs = loadedSudokuGrids.Split('G');
+            for(int i = 1; i < sudokuStrs.Length; i++)
+            {
+                int index = sudokuStrs[i].IndexOf(System.Environment.NewLine);
+                sudokuStrs[i] = sudokuStrs[i].Substring(index + System.Environment.NewLine.Length);
+            }
+            string randomSudoku = sudokuStrs[(new Random()).Next(sudokuStrs.Length)];
+            CreateCells(boxCellMap, graphicGrid, randomSudoku.Replace("\n", "").Replace("\r", ""));
         }
         
         public Sudoku(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, string filename)

@@ -79,7 +79,9 @@ namespace SudokuWaveFuncCollapse
                         Size = new Size(cellLength, cellLength),
                         Location = new Point(cellLength * i, cellLength * j),
                         BorderStyle = BorderStyle.FixedSingle,
-                        Text = cellIndex.ToString()
+                        Text = cellIndex.ToString(),
+                        Font = new Font(FontFamily.GenericSansSerif, 20),
+                        TextAlign = ContentAlignment.MiddleCenter
                     };
 
                     boxCellMap[cellIndex] = boxIndex;
