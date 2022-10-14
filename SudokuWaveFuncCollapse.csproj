@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormViewController.cs" />
+    <Compile Include="GraphicGrid.cs" />
     <Compile Include="SudokuForm.cs">
       <SubType>Form</SubType>
     </Compile>

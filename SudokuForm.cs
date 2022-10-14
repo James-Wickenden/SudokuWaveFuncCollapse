@@ -14,7 +14,11 @@ namespace SudokuWaveFuncCollapse
     {
         private readonly int sideLength = 450;
         private static readonly int margin = 25;
+        
         private Panel backPanel;
+        private Sudoku sudoku;
+        private GraphicGrid graphicGrid;
+
         public SudokuForm()
         {
             InitializeComponent();
@@ -26,27 +30,12 @@ namespace SudokuWaveFuncCollapse
             ConfigureForm();
 
             // Now, generate the sudoku grid panel and its label children
-            FormViewController graphicGrid = new FormViewController(sideLength, margin);
+            graphicGrid = new GraphicGrid(sideLength, margin);
             backPanel.Controls.Add(graphicGrid.GetGridPanel());
 
             // Next, create the sudoku model
-            Sudoku sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), "test_sudoku.txt");
+            sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid, "test_sudoku.txt");
             
-
-            for (int i = 0; i < 9; i++)
-            {
-                for (int j=0;j<9;j++)
-                {
-                    int cellValue = sudoku.Cells[i + (j * 9)].Entropy;
-                    if (sudoku.Cells[i + (j * 9)].Filled) {
-                        graphicGrid.UpdateCellLabel(i + (j * 9), " ");
-                    }
-                    else
-                    {
-                        graphicGrid.UpdateCellLabel(i + (j * 9), cellValue.ToString());
-                    }
-                }
-            }
         }
 
         private void ConfigureForm()
@@ -54,7 +43,7 @@ namespace SudokuWaveFuncCollapse
             // Set the size of the window
             // The addition is to allow space for margins, and the bar at the top
             int mywidth = sideLength + (margin * 2) + 20;
-            int myheight = sideLength + (margin * 2) + 40;
+            int myheight = sideLength + (margin * 2) + 140;
             this.Size = new Size(mywidth, myheight);
             this.Text = "Sudoku Wave Collapse Function Solver";
 
@@ -66,6 +55,33 @@ namespace SudokuWaveFuncCollapse
                 BackColor = Color.Black
             };
             this.Controls.Add(backPanel);
+
+            AddButtons();
+        }
+
+        private void AddButtons()
+        {
+            Button buttonAdvance = new Button() {
+                Width = 210, Height = 50, Top = 500, BackColor=Color.White, 
+                Text = "Advance",
+                Left = 25
+            };
+            backPanel.Controls.Add(buttonAdvance);
+            buttonAdvance.Click += (sender, args) => {
+                Cell picked = sudoku.Model.AdvanceModel(sudoku); 
+                if (!(picked is null))
+                {
+                    graphicGrid.UpdateCellLabel(picked.CellIndex, picked.Value.ToString());
+                }
+            };
+
+            Button buttonRestart = new Button()
+            {
+                Width = 210, Height = 50, Top = 500, BackColor=Color.White,
+                Text = "Restart",
+                Left = 265
+            };
+            backPanel.Controls.Add(buttonRestart);
         }
     }
 }

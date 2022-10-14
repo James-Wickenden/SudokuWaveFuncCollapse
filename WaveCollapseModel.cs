@@ -8,7 +8,7 @@ namespace SudokuWaveFuncCollapse
 {
     class WaveCollapseModel
     {
-        public void AdvanceModel(Sudoku sudoku)
+        public Cell AdvanceModel(Sudoku sudoku)
         {
             List<Cell> zeroEntropyCells = new List<Cell>();
             Cell[] cells = sudoku.Cells;
@@ -21,10 +21,13 @@ namespace SudokuWaveFuncCollapse
                 }
             }
 
+            if (zeroEntropyCells.Count == 0) return null;
             Cell picked = zeroEntropyCells[(new Random()).Next(zeroEntropyCells.Count)];
             picked.Value = picked.Options[0];
             picked.Filled = true;
             ReduceEntropyInModel(sudoku, picked);
+
+            return picked;
         }
 
         public void ReduceInitialEntropy(Sudoku sudoku)
@@ -66,21 +69,21 @@ namespace SudokuWaveFuncCollapse
     class Sudoku
     {
         public Cell[] Cells = new Cell[81];
-        private WaveCollapseModel Model = new WaveCollapseModel();
+        public WaveCollapseModel Model = new WaveCollapseModel();
 
-        public Sudoku(Dictionary<int,int> boxCellMap)
+        public Sudoku(Dictionary<int,int> boxCellMap, GraphicGrid graphicGrid)
         {
-            CreateCells(boxCellMap);
+            CreateCells(boxCellMap, graphicGrid);
         }
         
-        public Sudoku(Dictionary<int, int> boxCellMap, string filename)
+        public Sudoku(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, string filename)
         {
             string loadedSudokuGrid = System.IO.File.ReadAllText(filename);
             loadedSudokuGrid = loadedSudokuGrid.Replace("\n", "").Replace("\r", "");
-            CreateCells(boxCellMap, loadedSudokuGrid);
+            CreateCells(boxCellMap, graphicGrid, loadedSudokuGrid);
         }
 
-        private void CreateCells(Dictionary<int, int> boxCellMap, string loadedSudokuGrid = "")
+        private void CreateCells(Dictionary<int, int> boxCellMap, GraphicGrid graphicGrid, string loadedSudokuGrid = "")
         {
             // Iterate through the sudoku grid rows and columns and create the cells at each location
             if (loadedSudokuGrid=="") loadedSudokuGrid = new string(' ', 81);
@@ -90,6 +93,7 @@ namespace SudokuWaveFuncCollapse
                 for (int j = 0; j < 9; j++)
                 {
                     Cells[i + (j * 9)] = new Cell(i, j, boxCellMap[i + (j * 9)], loadedSudokuGrid[i + (j * 9)]);
+                    graphicGrid.UpdateCellLabel(i + (j * 9), loadedSudokuGrid[i + (j * 9)].ToString());
                 }
             }
 
