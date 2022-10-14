@@ -35,12 +35,22 @@ namespace SudokuWaveFuncCollapse
                         Size = new Size(boxLength, boxLength),
                         Location = new Point(boxLength * i, boxLength * j),
                         BorderStyle = BorderStyle.FixedSingle
+                        
                     };
 
-                    // Then, fill it with cells that each have their own border.
-                    // This means that the boxes have a double thick border to differentiate box edges
-                    PopulateBox(cells, boxes[i + (j * 3)], i + (j * 3), boxLength);
+                    Label lbl_index = new Label();
+                    lbl_index.Text = '(' + i.ToString() + ',' + j.ToString() + ')' + '='+ (i + (j * 3)).ToString(); 
+                    boxes[i + (j * 3)].Controls.Add(lbl_index);
+                    //gridPanel.Controls.Add(boxes[i + (j * 3)]);
+                }
+            }
 
+            PopulateBoxes(cells, boxes, boxLength);
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
                     gridPanel.Controls.Add(boxes[i + (j * 3)]);
                 }
             }
@@ -48,23 +58,30 @@ namespace SudokuWaveFuncCollapse
             return cells;
         }
 
-        // For a given box, add the cells inside it, using the same code as for boxes inside the grid
-        private static void PopulateBox(Label[] cells, Panel boxPanel, int boxIndex, int boxLength)
+        // Add the cells inside the boxes, using the same code as for boxes inside the grid
+        private static void PopulateBoxes(Label[] cells, Panel[] boxes, int boxLength)
         {
             int cellLength = boxLength / 3;
-            for (int i = 0; i < 3; i++)
+            string tablecalcstring = "";
+            for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 9; j++)
                 {
-                    cells[(boxIndex * 9) + i + (j * 3)] = new Label()
+                    int boxIndex = ((i / 3) * 3) + (j / 3);
+                    cells[i + (j * 9)] = new Label()
                     {
                         Size = new Size(cellLength, cellLength),
                         Location = new Point(cellLength * i, cellLength * j),
-                        BorderStyle = BorderStyle.FixedSingle
+                        BorderStyle = BorderStyle.FixedSingle,
+                        Text = i.ToString() + ',' + j.ToString() + " = " + boxIndex.ToString()
                     };
-                    boxPanel.Controls.Add(cells[(boxIndex * 9) + i + (j * 3)]);
+
+                    
+                    tablecalcstring += i.ToString() + ',' + j.ToString() + " = " + boxIndex.ToString() + '\n';
+                    boxes[boxIndex].Controls.Add(cells[i + (j * 9)]);
                 }
             }
+            MessageBox.Show(tablecalcstring);
         }
     }
 }

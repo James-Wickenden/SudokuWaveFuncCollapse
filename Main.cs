@@ -45,7 +45,7 @@ namespace SudokuWaveFuncCollapse
 
             for (int i=0;i<cells.Length;i++)
             {
-                cells[i].Text = i.ToString();
+                //cells[i].Text = i.ToString();
             }
         }
     }
