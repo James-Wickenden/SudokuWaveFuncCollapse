@@ -8,13 +8,13 @@ using System.Windows.Forms;
 
 namespace SudokuWaveFuncCollapse
 {
-    public class Grid
+    public class FormViewController
     {
         private Panel gridPanel;
         private Label[] cells;
         private static Dictionary<int, int> boxCellMap;
 
-        public Grid(int gridLength, int margin) {
+        public FormViewController(int gridLength, int margin) {
             // First, generate the sudoku panel
             gridPanel = new Panel
             {

@@ -1,7 +1,7 @@
 ﻿
 namespace SudokuWaveFuncCollapse
 {
-    partial class Main
+    partial class SudokuForm
     {
         /// <summary>
         /// Required designer variable.

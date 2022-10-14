@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace SudokuWaveFuncCollapse
 {
-    public partial class Main : Form
+    public partial class SudokuForm : Form
     {
         private readonly int sideLength = 450;
         private static readonly int margin = 25;
         private Panel backPanel;
-        public Main()
+        public SudokuForm()
         {
             InitializeComponent();
         }
@@ -26,25 +26,19 @@ namespace SudokuWaveFuncCollapse
             ConfigureForm();
 
             // Now, generate the sudoku grid panel and its label children
-            Grid graphicGrid = new Grid(sideLength, margin);
+            FormViewController graphicGrid = new FormViewController(sideLength, margin);
             backPanel.Controls.Add(graphicGrid.GetGridPanel());
 
             // Next, create the sudoku model
             Sudoku sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), "test_sudoku.txt");
-
-
-
-
-
-
-
+            
 
             for (int i = 0; i < 9; i++)
             {
                 for (int j=0;j<9;j++)
                 {
-                    int cellValue = sudoku.Cells[i + (j * 9)].Value;
-                    if (cellValue == -1) {
+                    int cellValue = sudoku.Cells[i + (j * 9)].Entropy;
+                    if (sudoku.Cells[i + (j * 9)].Filled) {
                         graphicGrid.UpdateCellLabel(i + (j * 9), " ");
                     }
                     else
