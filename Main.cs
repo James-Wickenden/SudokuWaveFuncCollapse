@@ -42,11 +42,6 @@ namespace SudokuWaveFuncCollapse
             Label[] cells = Grid.GenerateGraphicalGrid(sideLength, margin);
             Panel gridPanel = (Panel)cells[0].Parent.Parent;
             borderBack.Controls.Add(gridPanel);
-
-            for (int i=0;i<cells.Length;i++)
-            {
-                //cells[i].Text = i.ToString();
-            }
         }
     }
 }
