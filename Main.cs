@@ -30,14 +30,27 @@ namespace SudokuWaveFuncCollapse
             backPanel.Controls.Add(graphicGrid.GetGridPanel());
 
             // Next, create the sudoku model
-            Sudoku sudoku = new Sudoku(graphicGrid.GetBoxCellMap());
-            
+            Sudoku sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), "test_sudoku.txt");
+
+
+
+
+
+
+
 
             for (int i = 0; i < 9; i++)
             {
                 for (int j=0;j<9;j++)
                 {
-                    //graphicGrid.UpdateCellLabel(i + (j * 9), sudoku.Cells[i + (j * 9)].BoxIndex.ToString());
+                    int cellValue = sudoku.Cells[i + (j * 9)].Value;
+                    if (cellValue == -1) {
+                        graphicGrid.UpdateCellLabel(i + (j * 9), " ");
+                    }
+                    else
+                    {
+                        graphicGrid.UpdateCellLabel(i + (j * 9), cellValue.ToString());
+                    }
                 }
             }
         }

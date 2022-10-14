@@ -13,23 +13,34 @@ namespace SudokuWaveFuncCollapse
 
     class Sudoku
     {
-        private Cell[] cells;
+        private Cell[] cells = new Cell[81];
+        public Cell[] Cells { get => cells; set => cells = value; }
 
         public Sudoku(Dictionary<int,int> boxCellMap)
         {
-            // Create the new array of cells for the sudoku
-            cells = new Cell[81];
+            CreateCells(boxCellMap);
+        }
+        
+        public Sudoku(Dictionary<int, int> boxCellMap, string filename)
+        {
+            string loadedSudokuGrid = System.IO.File.ReadAllText(filename);
+            loadedSudokuGrid = loadedSudokuGrid.Replace("\n", "").Replace("\r", "");
+            CreateCells(boxCellMap, loadedSudokuGrid);
+        }
+
+        private void CreateCells(Dictionary<int, int> boxCellMap, string loadedSudokuGrid = "")
+        {
+            // Iterate through the sudoku grid rows and columns and create the cells at each location
+            if (loadedSudokuGrid=="") loadedSudokuGrid = new string(' ', 81);
 
             for (int i=0;i<9;i++)
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    cells[i + (j * 9)] = new Cell(i, j, boxCellMap[i + (j * 9)]);
+                    cells[i + (j * 9)] = new Cell(i, j, boxCellMap[i + (j * 9)], loadedSudokuGrid[i + (j * 9)]);
                 }
             }
         }
-
-        public Cell[] Cells { get => cells; set => cells = value; }
 
         // Methods for extracting columns, rows, and boxes for a cell.
         // Used for calculating cell entropy and validity.
@@ -74,22 +85,23 @@ namespace SudokuWaveFuncCollapse
 
     class Cell
     {
-        private int entropy;
-        private int value;
-        private int boxIndex;
-        private Tuple<int,int> position;
+        public int Entropy;
+        public bool Filled; 
+        public int Value;
+        public int BoxIndex;
+        public int CellIndex;
+        public Tuple<int,int> Position;
 
-        public Cell(int cell_x, int cell_y, int boxIndex)
+        public Cell(int cell_x, int cell_y, int boxIndex, char cValue)
         {
-            entropy = 8;
-            value = -1;
-            position = new Tuple<int, int>(cell_x, cell_y);
-            this.boxIndex = boxIndex;
-        }
+            Entropy = 8;
+            Filled = false;
+            Value = -1;
+            if (char.IsNumber(cValue)) Value = int.Parse(cValue.ToString());
 
-        public int Value { get => value; set => this.value = value; }
-        public int Entropy { get => entropy; set => entropy = value; }
-        public Tuple<int, int> Position { get => position; set => position = value; }
-        public int BoxIndex { get => boxIndex; set => boxIndex = value; }
+            Position = new Tuple<int, int>(cell_x, cell_y);
+            CellIndex = cell_x + (cell_y * 9);
+            BoxIndex = boxIndex;
+        }
     }
 }
