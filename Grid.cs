@@ -10,16 +10,26 @@ namespace SudokuWaveFuncCollapse
 {
     public class Grid
     {
-        // Sub for generating the grid panel and the labels that represent sudoku tiles
-        public static Label[] GenerateGraphicalGrid(int gridLength, int margin)
-        {
+        private Panel gridPanel;
+        private Label[] cells;
+
+        public Grid(int gridLength, int margin) {
             // First, generate the sudoku panel
-            Panel gridPanel = new Panel
+            gridPanel = new Panel
             {
                 BackColor = Color.White,
                 Location = new Point(margin, margin),
                 Size = new Size(gridLength, gridLength)
             };
+
+            // Then, the boxes and cells in the grid
+            cells = GenerateGraphicalGridLabels(gridLength, gridPanel);
+        }
+
+        // Sub for generating the grid panel and the labels that represent sudoku tiles
+        private static Label[] GenerateGraphicalGridLabels(int gridLength, Panel gridPanel)
+        {
+            
 
             // Now, generate the boxes in the grid, and the cells in the boxes
             Panel[] boxes = new Panel[9];
@@ -74,6 +84,21 @@ namespace SudokuWaveFuncCollapse
                     box.Controls.Add(cells[cellIndex]);
                 }
             }
+        }
+
+        public Label[] GetCells()
+        {
+            return cells;
+        }
+
+        public void UpdateCellLabel(int cellIndex, string newText)
+        {
+            cells[cellIndex].Text = newText;
+        }
+
+        public Panel GetGridPanel()
+        {
+            return gridPanel;
         }
     }
 }

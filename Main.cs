@@ -14,13 +14,30 @@ namespace SudokuWaveFuncCollapse
     {
         private readonly int sideLength = 450;
         private static readonly int margin = 25;
-
+        private Panel backPanel;
         public Main()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+            // First, configure the window and add a panel to it
+            ConfigureForm();
+
+            // Now, generate the sudoku grid panel and its label children
+            Grid graphicGrid = new Grid(sideLength, margin);
+            backPanel.Controls.Add(graphicGrid.GetGridPanel());
+
+            // Next, create the sudoku model
+            Sudoku sudoku = new Sudoku();
+            for (int i=0;i< sudoku.Cells.Length;i++)
+            {
+                graphicGrid.UpdateCellLabel(i, sudoku.Cells[i].Value.ToString());
+            }
+        }
+
+        private void ConfigureForm()
         {
             // Set the size of the window
             // The addition is to allow space for margins, and the bar at the top
@@ -31,17 +48,12 @@ namespace SudokuWaveFuncCollapse
 
             // Create a background panel to attach the grid panel to.
             // This is a workaround for margins which are weird and seem to only kick in when docked, which i don't care for
-            Panel borderBack = new Panel
+            backPanel = new Panel
             {
                 Size = this.Size,
                 BackColor = Color.Black
             };
-            this.Controls.Add(borderBack);
-
-            // Now, generate the sudoku grid and its label children
-            Label[] cells = Grid.GenerateGraphicalGrid(sideLength, margin);
-            Panel gridPanel = (Panel)cells[0].Parent.Parent;
-            borderBack.Controls.Add(gridPanel);
+            this.Controls.Add(backPanel);
         }
     }
 }
