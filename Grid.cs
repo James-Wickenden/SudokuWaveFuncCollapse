@@ -12,6 +12,7 @@ namespace SudokuWaveFuncCollapse
     {
         private Panel gridPanel;
         private Label[] cells;
+        private static Dictionary<int, int> boxCellMap;
 
         public Grid(int gridLength, int margin) {
             // First, generate the sudoku panel
@@ -22,6 +23,9 @@ namespace SudokuWaveFuncCollapse
                 Size = new Size(gridLength, gridLength)
             };
 
+            // Create the map that links a cell index to the box it lives in
+            boxCellMap = new Dictionary<int, int>();
+
             // Then, the boxes and cells in the grid
             cells = GenerateGraphicalGridLabels(gridLength, gridPanel);
         }
@@ -29,8 +33,6 @@ namespace SudokuWaveFuncCollapse
         // Sub for generating the grid panel and the labels that represent sudoku tiles
         private static Label[] GenerateGraphicalGridLabels(int gridLength, Panel gridPanel)
         {
-            
-
             // Now, generate the boxes in the grid, and the cells in the boxes
             Panel[] boxes = new Panel[9];
             Label[] cells = new Label[81];
@@ -45,7 +47,6 @@ namespace SudokuWaveFuncCollapse
                         Size = new Size(boxLength, boxLength),
                         Location = new Point(boxLength * i, boxLength * j),
                         BorderStyle = BorderStyle.FixedSingle
-                        
                     };
 
                     // Then fill the box with cells, so that the result is sequentially ordered wrt the grid as a whole
@@ -81,6 +82,7 @@ namespace SudokuWaveFuncCollapse
                         Text = cellIndex.ToString()
                     };
 
+                    boxCellMap[cellIndex] = boxIndex;
                     box.Controls.Add(cells[cellIndex]);
                 }
             }
@@ -99,6 +101,11 @@ namespace SudokuWaveFuncCollapse
         public Panel GetGridPanel()
         {
             return gridPanel;
+        }
+
+        public Dictionary<int,int> GetBoxCellMap()
+        {
+            return boxCellMap;
         }
     }
 }
