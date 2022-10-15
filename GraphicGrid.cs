@@ -84,20 +84,25 @@ namespace SudokuWaveFuncCollapse
                         TextAlign = ContentAlignment.MiddleCenter
                     };
 
+                    // Populate a map of cell indices to the box number they lie in.
+                    // This avoids having to do confusing maths to calculate box number.
+                    // E.g. cell 64 lies in box 6, cell 66 in box 7
                     boxCellMap[cellIndex] = boxIndex;
                     box.Controls.Add(cells[cellIndex]);
                 }
             }
         }
 
-        public Label[] GetCells()
-        {
-            return cells;
-        }
-
+        // Replace the label text for the cell at cellIndex with newText
         public void UpdateCellLabel(int cellIndex, string newText)
         {
             cells[cellIndex].Text = newText;
+        }
+
+        // Getters for the Graphic elements and the Box to Cell Map
+        public Label[] GetCells()
+        {
+            return cells;
         }
 
         public Panel GetGridPanel()

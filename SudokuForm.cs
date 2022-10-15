@@ -14,10 +14,12 @@ namespace SudokuWaveFuncCollapse
     {
         private readonly int sideLength = 450;
         private static readonly int margin = 25;
-        
+        private int sudokuIndex = 1;
+
         private Panel backPanel;
         private Sudoku sudoku;
         private GraphicGrid graphicGrid;
+        private WaveCollapseModel model;
 
         public SudokuForm()
         {
@@ -33,8 +35,11 @@ namespace SudokuWaveFuncCollapse
             graphicGrid = new GraphicGrid(sideLength, margin);
             backPanel.Controls.Add(graphicGrid.GetGridPanel());
 
-            // Next, create the sudoku model
-            sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid);
+            // Next, create the sudoku and its model
+            model = new WaveCollapseModel();
+            string sudokuSetupStr = model.GetSudokuSetupString(sudokuIndex);
+            sudoku = new Sudoku(model, graphicGrid, sudokuSetupStr);
+
         }
 
         private void ConfigureForm()
@@ -44,7 +49,7 @@ namespace SudokuWaveFuncCollapse
             int mywidth = sideLength + (margin * 2) + 20;
             int myheight = sideLength + (margin * 2) + 140;
             this.Size = new Size(mywidth, myheight);
-            this.Text = "Sudoku Wave Collapse Function Solver";
+            this.Text = "Sudoku Wave Collapse Function Solver " + sudokuIndex.ToString();
 
             // Create a background panel to attach the grid panel to.
             // This is a workaround for margins which are weird and seem to only kick in when docked, which i don't care for
@@ -58,6 +63,8 @@ namespace SudokuWaveFuncCollapse
             AddButtons();
         }
 
+        // Add buttons for advancing the sudoku, and for moving to the next board
+        // (There are 50 boards; once it reaches the end, it loops back to board 1).
         private void AddButtons()
         {
             Button buttonAdvance = new Button() {
@@ -67,7 +74,8 @@ namespace SudokuWaveFuncCollapse
             };
             backPanel.Controls.Add(buttonAdvance);
             buttonAdvance.Click += (sender, args) => {
-                Cell picked = sudoku.Model.AdvanceModel(sudoku); 
+                // Get the updated cell from the model advancing, and fill it in on the grid panel
+                Cell picked = model.AdvanceModel(sudoku); 
                 if (!(picked is null))
                 {
                     graphicGrid.UpdateCellLabel(picked.CellIndex, picked.Value.ToString());
@@ -82,8 +90,11 @@ namespace SudokuWaveFuncCollapse
             };
             backPanel.Controls.Add(buttonRestart);
             buttonRestart.Click += (sender, args) => {
-                sudoku = new Sudoku(graphicGrid.GetBoxCellMap(), graphicGrid, sudoku.SudokuNo + 1);
-                this.Text = "Sudoku Wave Collapse Function Solver " + sudoku.SudokuNo.ToString();
+                // Create the new sudoku, which automatically updates the labels on the board
+                sudokuIndex = (sudokuIndex % 50) + 1;
+                string sudokuSetupStr = model.GetSudokuSetupString(sudokuIndex);
+                sudoku = new Sudoku(model, graphicGrid, sudokuSetupStr);
+                this.Text = "Sudoku Wave Collapse Function Solver " + sudokuIndex.ToString();
             };
         }
     }
